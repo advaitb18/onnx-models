@@ -1,0 +1,42 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Runtime
+runtime/
+logs/
+reports/
+signals/
+*.pid
+
+# MT5 generated binaries/logs
+*.ex5
+*.log
+
+# Local market/training data
+data/
+*.csv
+*.parquet
+
+# Downloaded model artifacts
+models/v03h/*
+!models/v03h/README.md
+
+models/v05h/*
+!models/v05h/README.md
+
+# Secrets
+.env
+.env.*
+*.token
+credentials*
+secrets/
+
+# Local OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

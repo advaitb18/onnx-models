@@ -1,0 +1,41 @@
+{
+  "release": "xauusd-multi-strategy-ml-portfolio",
+  "python_runtime_files": 11,
+  "huggingface_user": "addyAIMLprojects",
+  "huggingface_models": [
+    "addyAIMLprojects/xauusd-v03h-sell",
+    "addyAIMLprojects/xauusd-v05h-buy"
+  ],
+  "files": [
+    ".gitignore",
+    "LICENSE_DECISION_REQUIRED.md",
+    "README.md",
+    "config/multi_strategy_portfolio.json",
+    "models/v03h/README.md",
+    "models/v05h/README.md",
+    "mt5_ea/XAUUSD_MTF_BAR_EXPORTER_P8A1.mq5",
+    "mt5_ea/XAUUSD_STRATEGY_PORTFOLIO_LIVE_V02.mq5",
+    "requirements.txt",
+    "scripts/__init__.py",
+    "scripts/download_models.py",
+    "scripts/p3ab_build_core_features.py",
+    "scripts/p3f_advanced_indicator_pack.py",
+    "scripts/p3h2_live_safe_confirmed_structure.py",
+    "scripts/p3h_market_structure_features.py",
+    "scripts/p3j_mtf_asof_alignment.py",
+    "scripts/p3k_mtf_swing_confluence_zones.py",
+    "scripts/p3l_candlestick_pattern_scores.py",
+    "scripts/p8b0b_live_feature_builder_callable_smoke_test.py",
+    "scripts/runtime_paths.py",
+    "scripts/v05h2_m5_buy_dry_run_scorer.py",
+    "scripts/validate_runtime.py",
+    "scripts/xauusd_multi_strategy_engine_v01.py",
+    "start.sh"
+  ],
+  "portability_findings": [
+    {
+      "type": "hardcoded_omen_mt5",
+      "file": "scripts/v05h2_m5_buy_dry_run_scorer.py"
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schema_version": 2,
+  "engine_version": "XAUUSD_MULTI_STRATEGY_ENGINE_V01",
+  "project_root_mode": "AUTO",
+  "mt5_common_files_mode": "AUTO",
+  "portfolio": {
+    "enabled": true,
+    "independent_strategy_execution": true,
+    "cross_strategy_veto": false,
+    "allow_opposite_directions": true,
+    "require_hedging_account_for_opposite_positions": true,
+    "signal_mode": "IMMUTABLE_QUEUE",
+    "signal_subdirectory": "xau_signals/portfolio",
+    "signal_inbox": "xau_signals/portfolio/inbox",
+    "signal_processed": "xau_signals/portfolio/processed",
+    "signal_rejected": "xau_signals/portfolio/rejected",
+    "signal_expired": "xau_signals/portfolio/expired",
+    "state_file": "runtime/multi_strategy_state.json",
+    "performance_ledger": "runtime/strategy_performance.jsonl",
+    "default_signal_expiry_seconds": 240,
+    "portfolio_risk": {
+      "enabled": true,
+      "max_open_positions_total": 1024,
+      "max_open_positions_per_strategy": 100,
+      "max_total_lots": 1.0,
+      "block_new_trade_if_margin_level_below": 0.0
+    }
+  },
+  "strategies": {
+    "V03H_F002_SELL": {
+      "enabled": true,
+      "strategy_id": "V03H_F002_SELL",
+      "model_id": "V03H_WF2025_RF_SELL",
+      "symbol": "XAUUSD",
+      "broker_symbol_mode": "CHART_SYMBOL",
+      "timeframe": "M15",
+      "direction": "SELL",
+      "adapter": "ONNX_RANK",
+      "builder": {
+        "type": "COMMAND",
+        "command": [
+          "python3",
+          "-m",
+          "scripts.p8b0b_live_feature_builder_callable_smoke_test"
+        ],
+        "output_path": "data/p8b0b/p8b0b_latest_live_feature_row.parquet",
+        "timestamp_column": "timestamp"
+      },
+      "model": {
+        "path": "models/v03h/final_rf_sell_model.onnx",
+        "feature_order_path": "models/v03h/feature_order.json",
+        "score_distribution_path": "models/v03h/score_distribution.parquet",
+        "score_column_mode": "AUTO_RF"
+      },
+      "decision": {
+        "type": "RANK_THRESHOLD",
+        "threshold": 0.4,
+        "comparison": ">="
+      },
+      "filters": [],
+      "trade": {
+        "entry_type": "MARKET",
+        "tp_atr": 2.0,
+        "sl_atr": 1.0,
+        "max_hold_bars": 32,
+        "signal_expiry_seconds": 240,
+        "magic": 7300201,
+        "one_position_per_strategy": true
+      },
+      "metadata": {
+        "source_finding": "F002",
+        "original_locked_rank_threshold": 0.49,
+        "current_operational_rank_threshold": 0.4,
+        "notes": "Independent M15 SELL strategy."
+      }
+    },
+    "V05H_BUY": {
+      "enabled": true,
+      "strategy_id": "V05H_BUY",
+      "model_id": "V05H_WF2025_RF_BUY",
+      "symbol": "XAUUSD",
+      "broker_symbol_mode": "CHART_SYMBOL",
+      "timeframe": "M5",
+      "direction": "BUY",
+      "adapter": "EXTERNAL_SUMMARY",
+      "builder": {
+        "type": "COMMAND",
+        "command": [
+          "python3",
+          "-m",
+          "scripts.v05h2_m5_buy_dry_run_scorer"
+        ],
+        "summary_path": "reports/ml/v05h/v05h2_live_pipeline_dry_run_summary.json",
+        "timestamp_field": "latest_timestamp"
+      },
+      "model": {
+        "path": "models/v05h/final_rf_buy_model.onnx",
+        "feature_order_path": "models/v05h/feature_order.json",
+        "score_distribution_path": "models/v05h/score_distribution.parquet"
+      },
+      "decision": {
+        "type": "PROBABILITY_THRESHOLD",
+        "score_field": "prob_buy",
+        "candidate_field": "is_buy_candidate",
+        "threshold": 0.4391089677810669,
+        "comparison": ">="
+      },
+      "filters": [],
+      "trade": {
+        "entry_type": "MARKET",
+        "tp_atr": 2.0,
+        "sl_atr": 1.5,
+        "max_hold_bars": 6,
+        "signal_expiry_seconds": 240,
+        "magic": 7300501,
+        "one_position_per_strategy": true
+      },
+      "metadata": {
+        "source_contract": "V05H relaxed BUY quality contract",
+        "quality_min_mfe_atr": 2.0,
+        "quality_max_mae_atr": 1.5,
+        "quality_max_bars": 6,
+        "notes": "Independent M5 BUY strategy."
+      }
+    },
+    "_FUTURE_MODEL_TEMPLATE": {
+      "enabled": false,
+      "strategy_id": "_FUTURE_MODEL_TEMPLATE",
+      "model_id": "REPLACE_ME",
+      "symbol": "XAUUSD",
+      "broker_symbol_mode": "CHART_SYMBOL",
+      "timeframe": "M15",
+      "direction": "BUY",
+      "adapter": "ONNX_PROBABILITY",
+      "builder": {
+        "type": "COMMAND",
+        "command": [
+          "python3",
+          "scripts/REPLACE_FEATURE_BUILDER.py"
+        ],
+        "output_path": "data/REPLACE/latest_features.parquet",
+        "timestamp_column": "timestamp"
+      },
+      "model": {
+        "path": "models/REPLACE/model.onnx",
+        "feature_order_path": "models/REPLACE/feature_order.json",
+        "score_distribution_path": null
+      },
+      "decision": {
+        "type": "PROBABILITY_THRESHOLD",
+        "threshold": 0.45,
+        "comparison": ">="
+      },
+      "filters": [],
+      "trade": {
+        "entry_type": "MARKET",
+        "tp_atr": 2.0,
+        "sl_atr": 1.0,
+        "max_hold_bars": 12,
+        "signal_expiry_seconds": 240,
+        "magic": 7399999,
+        "one_position_per_strategy": true
+      },
+      "metadata": {
+        "notes": "Disabled template. Copy this block when adding a future strategy."
+      }
+    }
+  }
+}

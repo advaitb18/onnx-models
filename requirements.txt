@@ -1,0 +1,9 @@
+pandas
+numpy
+pyarrow
+pyyaml
+rich
+loguru
+pytest
+
+huggingface_hub
